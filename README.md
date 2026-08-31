@@ -32,6 +32,13 @@ Ingeniero de Sistemas 🎓 | Backend Developer en formación | Explorando IA Apl
 
 ---
 
+## ⚡ Actividad reciente
+<!--START_SECTION:activity-->
+
+<!--END_SECTION:activity-->
+
+---
+
 ## 📫 Contáctame
 
 [![LinkedIn](https://img.shields.io/badge/-LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/luis-viuche/)
