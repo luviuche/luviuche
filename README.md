@@ -34,16 +34,16 @@ Ingeniero de Sistemas 🎓 | Backend Developer en formación | Explorando IA Apl
 
 ## ⚡ Actividad reciente
 <!--START_SECTION:activity-->
-1. 🎉 Merged PR [#7](https://github.com/luviuche/mi-primer-repo/pull/7) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
-2. 🔒 Closed issue [#3](https://github.com/luviuche/mi-primer-repo/issues/3) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
-3. 💪 Opened PR [#7](https://github.com/luviuche/mi-primer-repo/pull/7) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
-4. ℹ️ Assigned PR [#7](https://github.com/luviuche/mi-primer-repo/pull/7) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
-5. ℹ️ Assigned issue [#5](https://github.com/luviuche/mi-primer-repo/issues/5) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
-6. ❗ Opened issue [#5](https://github.com/luviuche/mi-primer-repo/issues/5) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
-7. 🔓 Reopened issue [#3](https://github.com/luviuche/mi-primer-repo/issues/3) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
-8. 🎉 Merged PR [#6](https://github.com/luviuche/mi-primer-repo/pull/6) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
-9. 🔒 Closed issue [#4](https://github.com/luviuche/mi-primer-repo/issues/4) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
-10. 💪 Opened PR [#6](https://github.com/luviuche/mi-primer-repo/pull/6) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
+1. 🎉 Merged PR [#2](https://github.com/luviuche/mi-tercer-repo/pull/2) in [luviuche/mi-tercer-repo](https://github.com/luviuche/mi-tercer-repo)
+2. 💪 Opened PR [#2](https://github.com/luviuche/mi-tercer-repo/pull/2) in [luviuche/mi-tercer-repo](https://github.com/luviuche/mi-tercer-repo)
+3. 🎉 Merged PR [#1](https://github.com/luviuche/mi-tercer-repo/pull/1) in [luviuche/mi-tercer-repo](https://github.com/luviuche/mi-tercer-repo)
+4. 💪 Opened PR [#1](https://github.com/luviuche/mi-tercer-repo/pull/1) in [luviuche/mi-tercer-repo](https://github.com/luviuche/mi-tercer-repo)
+5. 🎉 Merged PR [#7](https://github.com/luviuche/mi-primer-repo/pull/7) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
+6. 🔒 Closed issue [#3](https://github.com/luviuche/mi-primer-repo/issues/3) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
+7. 💪 Opened PR [#7](https://github.com/luviuche/mi-primer-repo/pull/7) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
+8. ℹ️ Assigned PR [#7](https://github.com/luviuche/mi-primer-repo/pull/7) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
+9. ℹ️ Assigned issue [#5](https://github.com/luviuche/mi-primer-repo/issues/5) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
+10. ❗ Opened issue [#5](https://github.com/luviuche/mi-primer-repo/issues/5) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
 <!--END_SECTION:activity-->
 
 ---
