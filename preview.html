@@ -1,0 +1,70 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Profile preview</title>
+<!-- Local preview of every generated asset, both themes at once, animations
+     running. Not part of the profile: open it with a browser after
+     `python scripts/build.py` to check a change before pushing. -->
+<style>
+  :root { color-scheme: light dark; font-family: ui-sans-serif, system-ui, sans-serif; }
+  body { margin: 0; background: #fff; color: #1f2328; }
+  header { padding: 24px 32px 8px; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  p.hint { margin: 0; font-size: 13px; color: #636c76; }
+  .themes { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  section { padding: 24px 32px 48px; }
+  section.dark { background: #0d1117; color: #e6edf3; }
+  h2 { font-size: 12px; letter-spacing: 1.4px; text-transform: uppercase; opacity: .6;
+       margin: 28px 0 10px; font-weight: 700; }
+  h2:first-of-type { margin-top: 0; }
+  img { max-width: 100%; display: block; margin-bottom: 12px; }
+  .row { display: flex; flex-wrap: wrap; gap: 12px; }
+  .row img { flex: 1 1 320px; max-width: 470px; }
+  @media (max-width: 900px) { .themes { grid-template-columns: 1fr; } }
+</style>
+
+<header>
+  <h1>Profile preview</h1>
+  <p class="hint">Both themes side by side. Reload after <code>python scripts/build.py</code>.</p>
+</header>
+
+<div class="themes">
+  <section class="light">
+    <h2>Light</h2>
+    <img src="assets/banner-light.svg" alt="Banner">
+    <h2>Signals</h2>
+    <div class="row">
+      <img src="assets/radar-light.svg" alt="Skill radar">
+      <img src="assets/radar-langs-light.svg" alt="Language radar">
+    </div>
+    <h2>Numbers</h2>
+    <img src="assets/card-stats-light.svg" alt="Stats">
+    <img src="assets/card-languages-light.svg" alt="Language mix">
+    <h2>Featured work</h2>
+    <div class="row">
+      <img src="assets/card-proyecto_redes_estructura-light.svg" alt="Project">
+      <img src="assets/card-sigcap-project-light.svg" alt="Project">
+      <img src="assets/card-forohub-light.svg" alt="Project">
+      <img src="assets/card-simulador-busquedas-cc2-light.svg" alt="Project">
+    </div>
+  </section>
+
+  <section class="dark">
+    <h2>Dark</h2>
+    <img src="assets/banner-dark.svg" alt="Banner">
+    <h2>Signals</h2>
+    <div class="row">
+      <img src="assets/radar-dark.svg" alt="Skill radar">
+      <img src="assets/radar-langs-dark.svg" alt="Language radar">
+    </div>
+    <h2>Numbers</h2>
+    <img src="assets/card-stats-dark.svg" alt="Stats">
+    <img src="assets/card-languages-dark.svg" alt="Language mix">
+    <h2>Featured work</h2>
+    <div class="row">
+      <img src="assets/card-proyecto_redes_estructura-dark.svg" alt="Project">
+      <img src="assets/card-sigcap-project-dark.svg" alt="Project">
+      <img src="assets/card-forohub-dark.svg" alt="Project">
+      <img src="assets/card-simulador-busquedas-cc2-dark.svg" alt="Project">
+    </div>
+  </section>
+</div>

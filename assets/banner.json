@@ -1,0 +1,42 @@
+{
+  "_comment": "Content of the hero banner. Edit the lines, push, and the Banner workflow redraws both themes. 'cmd' lines get the accent prompt, 'hi' is a highlighted answer, 'out' is secondary text.",
+  "title": "profile.sh --live",
+  "source": {
+    "file": "assets/source/cache/monogram.npy",
+    "mode": "glyph",
+    "_mode_help": "'photo' inverts on the light theme (ink where the picture is dark). 'glyph' keeps the same shape in both themes.",
+    "field": 0.1,
+    "_field_help": "Minimum ink in every cell, 0 for none. Gives the panel its lit-matrix background."
+  },
+  "cycle_hold": 3.2,
+  "lines": [
+    {
+      "style": "cmd",
+      "text": "whoami"
+    },
+    {
+      "style": "hi",
+      "text": "Luis Viuche"
+    },
+    {
+      "style": "out",
+      "text": "Systems Engineering student · Backend + applied AI"
+    },
+    {
+      "style": "cmd",
+      "text": "cat stack.txt"
+    },
+    {
+      "style": "out",
+      "text": "Java · Spring Boot · Python · FastAPI · PostgreSQL"
+    },
+    {
+      "style": "cmd",
+      "text": "status --now"
+    },
+    {
+      "style": "hi",
+      "text": "Open to my first software engineering internship"
+    }
+  ]
+}

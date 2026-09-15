@@ -1,0 +1,13 @@
+{
+  "title": "Skill Radar",
+  "_comment": "Self-rated, 0-100. These are a starting guess from the repos - correct them and the Charts workflow redraws the radar.",
+  "axes": [
+    { "label": "Java / Spring Boot", "value": 78 },
+    { "label": "REST API design",    "value": 74 },
+    { "label": "Python",             "value": 72 },
+    { "label": "Applied AI / LLMs",  "value": 64 },
+    { "label": "Databases / SQL",    "value": 68 },
+    { "label": "Algorithms & DS",    "value": 80 },
+    { "label": "Git & CI/CD",        "value": 70 }
+  ]
+}

@@ -1,0 +1,35 @@
+name: Activity
+
+# Fills the <!--START_SECTION:activity--> block in the README.
+
+on:
+  schedule:
+    # Every 12 hours. Note the leading 0: "* */12 * * *" would fire every
+    # minute for two hours a day, which is what the old workflow did.
+    - cron: "0 */12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: activity
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Update recent activity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Pinned to a release rather than @master, so an upstream change cannot
+      # rewrite the README without warning.
+      - uses: jamesgeorge007/github-activity-readme@v0.5.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          COMMIT_MSG: "chore: update recent activity"
+          MAX_LINES: 5
+          COMMIT_NAME: github-actions[bot]
+          COMMIT_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com

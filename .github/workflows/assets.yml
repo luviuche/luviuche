@@ -1,0 +1,60 @@
+name: Assets
+
+# Redraws the banner, radars and cards, then commits them only if they moved.
+# Everything the README shows is generated here and served from this repo, so
+# the profile never depends on a third-party image service staying up.
+
+on:
+  schedule:
+    # 03:30 UTC daily - after that the stat card is at most a day stale.
+    - cron: "30 3 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "assets/*.json"
+      - "assets/source/**"
+      - "scripts/**"
+      - ".github/workflows/assets.yml"
+
+permissions:
+  contents: write
+
+# Two runs committing to main at once would collide.
+concurrency:
+  group: assets
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Regenerate SVG assets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Build every asset
+        env:
+          # A PAT unlocks the contribution graph, which the REST API will not
+          # give up. Without one the stat card just shows fewer tiles.
+          GITHUB_TOKEN: ${{ secrets.METRICS_TOKEN || secrets.GITHUB_TOKEN }}
+        run: python scripts/build.py --user "${{ github.repository_owner }}"
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets
+          if git diff --staged --quiet; then
+            echo "assets unchanged"
+          else
+            git commit -m "chore: refresh generated assets"
+            git pull --rebase --autostash origin main
+            git push
+          fi
