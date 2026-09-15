@@ -49,6 +49,14 @@ python scripts/build.py --skip-cards # offline: no GitHub API calls
 open preview.html                    # both themes, animations running
 ```
 
+### One consequence worth knowing
+
+Because pushes skip the API-backed cards, editing `projects.json` does not
+redraw the project cards straight away. Either wait for the nightly run, or
+trigger it by hand: Actions -> Assets -> Run workflow. Edits to `banner.json`,
+`skills.json`, `langmix.json` and `theme.json` are unaffected and redraw on
+push as usual.
+
 ## Using a real photo in the banner
 
 The dot panel currently renders an `LV` monogram. To use a portrait:
@@ -96,7 +104,13 @@ filename (`banner-dark.v2.svg`) and update the README reference.
 
 ## Token
 
-The stat card shows contribution totals and streaks only with a personal access
-token, because the REST API does not expose the contribution graph. Add one as
-a repository secret named `METRICS_TOKEN` (scope: `read:user`). Without it the
-card falls back to tiles the public API does provide.
+Contribution totals and streaks come from the GraphQL API, which the REST API
+does not expose. In practice the `GITHUB_TOKEN` that Actions injects on its own
+is enough - the first scheduled run produced all six tiles without any secret
+being configured.
+
+If those tiles ever disappear from the card, add a personal access token as a
+repository secret named `METRICS_TOKEN` (scope: `read:user`); the workflow
+prefers it over the default token. Running `scripts/cards.py` on a laptop with
+no token at all is the case that falls back to fewer tiles, which is why local
+builds and CI disagree about that file.

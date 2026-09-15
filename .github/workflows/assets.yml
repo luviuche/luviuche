@@ -39,12 +39,24 @@ jobs:
       - name: Install dependencies
         run: pip install -r scripts/requirements.txt
 
-      - name: Build every asset
+      - name: Build assets
         env:
-          # A PAT unlocks the contribution graph, which the REST API will not
-          # give up. Without one the stat card just shows fewer tiles.
           GITHUB_TOKEN: ${{ secrets.METRICS_TOKEN || secrets.GITHUB_TOKEN }}
-        run: python scripts/build.py --user "${{ github.repository_owner }}"
+        run: |
+          # On a push, only the deterministic assets are rebuilt. The stat and
+          # language cards read live GitHub data, so a laptop and CI can never
+          # produce the same bytes for them - CI can see the contribution
+          # graph and a local run cannot. Rebuilding them here would mean a
+          # bot commit landing on top of every single push, which is exactly
+          # the divergence this repo hit twice on day one.
+          #
+          # The daily schedule owns those files instead. Nobody is pushing at
+          # 03:30 UTC.
+          if [ "${{ github.event_name }}" = "push" ]; then
+            python scripts/build.py --skip-cards
+          else
+            python scripts/build.py --user "${{ github.repository_owner }}"
+          fi
 
       - name: Commit if changed
         run: |
