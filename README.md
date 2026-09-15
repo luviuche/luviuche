@@ -11,17 +11,26 @@
 <br>
 
 <a href="https://github.com/luviuche">
-  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=22&duration=2800&pause=900&color=3B82F6&center=true&vCenter=true&width=860&lines=Systems+Engineering+student;Backend+with+Java%2C+Spring+Boot+and+Python;Learning+to+build+with+applied+AI;Looking+for+my+first+internship" alt="What I do">
+  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=22&duration=2800&pause=900&color=3B82F6&center=true&vCenter=true&width=860&lines=Systems+Engineering+student+in+Bogot%C3%A1;Backend+with+Java%2C+Spring+Boot+and+Python;Building+toward+applied+AI+and+agents;Looking+for+my+first+internship" alt="What I do">
 </a>
 
 <br>
 
 <!-- LinkedIn keeps its brand blue on purpose: shields.io drops the white
-     glyph against a custom fill, and the badge ends up unreadable. -->
+     glyph against a custom fill, and the badge ends up unreadable. The rest
+     follow the page theme through <picture>. -->
 <a href="https://www.linkedin.com/in/luis-viuche/"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"></a>
-&nbsp;&nbsp;
-<a href="mailto:lmvm.zzz@gmail.com"><img src="https://img.shields.io/badge/Email-0d1117?style=for-the-badge&logo=gmail&logoColor=3B82F6" alt="Email"></a>
-&nbsp;&nbsp;
+&nbsp;
+<a href="https://x.com/ViucheLM"><picture><source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/X-0d1117?style=for-the-badge&logo=x&logoColor=3B82F6"><source media="(prefers-color-scheme: light)" srcset="https://img.shields.io/badge/X-f6f8fa?style=for-the-badge&logo=x&logoColor=2563EB"><img src="https://img.shields.io/badge/X-0d1117?style=for-the-badge&logo=x&logoColor=3B82F6" alt="X"></picture></a>
+&nbsp;
+<a href="https://instagram.com/lmviuche"><picture><source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/Instagram-0d1117?style=for-the-badge&logo=instagram&logoColor=3B82F6"><source media="(prefers-color-scheme: light)" srcset="https://img.shields.io/badge/Instagram-f6f8fa?style=for-the-badge&logo=instagram&logoColor=2563EB"><img src="https://img.shields.io/badge/Instagram-0d1117?style=for-the-badge&logo=instagram&logoColor=3B82F6" alt="Instagram"></picture></a>
+&nbsp;
+<a href="mailto:lmvm.zzz@gmail.com"><picture><source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/Email-0d1117?style=for-the-badge&logo=gmail&logoColor=3B82F6"><source media="(prefers-color-scheme: light)" srcset="https://img.shields.io/badge/Email-f6f8fa?style=for-the-badge&logo=gmail&logoColor=2563EB"><img src="https://img.shields.io/badge/Email-0d1117?style=for-the-badge&logo=gmail&logoColor=3B82F6" alt="Email"></picture></a>
+&nbsp;
+<picture><source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/limrnc.-0d1117?style=for-the-badge&logo=discord&logoColor=3B82F6"><source media="(prefers-color-scheme: light)" srcset="https://img.shields.io/badge/limrnc.-f6f8fa?style=for-the-badge&logo=discord&logoColor=2563EB"><img src="https://img.shields.io/badge/limrnc.-0d1117?style=for-the-badge&logo=discord&logoColor=3B82F6" alt="limrnc."></picture>
+
+<br><br>
+
 <img src="https://komarev.com/ghpvc/?username=luviuche&style=for-the-badge&color=3B82F6&label=VISITORS" alt="Profile views">
 
 </div>
@@ -30,22 +39,28 @@
 
 ## About
 
-I'm **Luis**, a Systems Engineering student finishing my degree and building backend
-services while I do it. Most of what I write is Java and Spring Boot on one side and
-Python on the other, and lately I've been pulling large language models into that work
-to see what they're genuinely good for.
+I'm **Luis**, a Systems Engineering student in Bogotá, Colombia. I write Java and Spring
+Boot on one side and Python on the other, and I'm working my way toward applied AI — the
+part where a model does real work inside a service instead of just answering questions.
 
-- 🎓 **Close to graduating in Systems Engineering.** Coursework is where I picked up
-  graphs, hashing and search algorithms, and I keep going back to them.
-- ☕ **Java and Spring Boot are where I'm most comfortable.** REST APIs, JWT
-  authentication, persistence, dependency injection - the ordinary backend work.
-- 🐍 **Python is the other half.** Currently training in backend development with
-  Python and applied AI at Platzi.
-- 🤖 **Interested in agents that do real work.** My favourite project so far pairs a
-  directed acyclic graph with a hybrid agent - deterministic rules plus an LLM - so the
-  model explains a result it did not invent.
-- 🎯 **Looking for my first software engineering internship.** If you're hiring
-  juniors for backend work, I'd like to hear from you.
+- 🎓 **Universidad Distrital Francisco José de Caldas**, graduating in the first half of
+  2027. Coursework is where I picked up graphs, hashing and search algorithms, and I keep
+  going back to them.
+- ☕ **Java and Spring Boot is where I'm most comfortable.** REST APIs, JWT authentication,
+  persistence, dependency injection — ordinary backend work, done properly.
+- 🐍 **Python is the other half.** I'm partway through a six-month Backend + Applied AI
+  track at Platzi. Engineering fundamentals, Git, the terminal and SQL are behind me;
+  FastAPI, LLM APIs, LangChain and agents are what's next.
+- 🤖 **Agents that do real work.** My favourite project so far pairs a directed acyclic
+  graph with a hybrid agent — deterministic rules plus an LLM — so the model explains a
+  result it did not invent.
+- 🐧 **Linux desktop customisation.** I run CachyOS and rice my setup the way other
+  people rearrange furniture.
+- 🎯 **Looking for my first internship.** If you're hiring juniors for backend work, I'd
+  like to hear from you.
+
+**Talk to me about** backend engineering, AI agents, whatever new tooling is actually
+worth the hype, or how to make a Linux desktop look good.
 
 <br>
 

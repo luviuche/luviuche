@@ -11,6 +11,32 @@ assets/langmix.json    the hand-authored language radar
 assets/projects.json   which repos appear as project cards
 ```
 
+## What updates itself, and what does not
+
+This matters: half the charts are live and half are not.
+
+| Asset | Source | Updates by itself? |
+|---|---|---|
+| `card-stats-*` | GitHub API | Yes, daily |
+| `card-languages-*` | GitHub API | Yes, daily |
+| `card-<repo>-*` | GitHub API + `projects.json` | Stars, forks and dates yes; the blurb is yours |
+| `radar-*` | `skills.json` | **No - a human writes these numbers** |
+| `radar-langs-*` | `langmix.json` | **No - a human writes these numbers** |
+| `banner-*` | `banner.json` | No |
+
+The two radars are a self-assessment. The daily workflow redraws the picture but
+never touches the values, so they stay exactly as written until someone edits
+the JSON. Treat them like a CV line: worth revisiting every few months, and
+stale if you finish a Spring course and the Java number never moves.
+
+That is the point of having both. The radar says what you reach for; the
+language card, computed from real code, says what you have actually written.
+When those two disagree, the disagreement is the interesting part.
+
+If you would rather the language radar be automatic, `scripts/cards.py` already
+computes the numbers - `langmix.json` could be generated from the same call
+instead of hand-written.
+
 ## Changing something
 
 Edit a JSON file, commit, push. The workflow redraws every affected SVG and

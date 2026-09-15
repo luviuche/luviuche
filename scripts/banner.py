@@ -41,12 +41,22 @@ PROMPT = "$ "
 # --------------------------------------------------------------------------- #
 # timeline
 # --------------------------------------------------------------------------- #
+MAX_CHARS = int((W - TEXT_X - 24) / CHAR_W)
+
+
 def build_timeline(lines: list[dict], hold: float) -> tuple[list[dict], float]:
     """Assign each line a start/end second, and return the total cycle length."""
     t = LEAD_IN
     spans = []
     for line in lines:
         text = PROMPT + line["text"] if line["style"] == "cmd" else line["text"]
+        if len(text) > MAX_CHARS:
+            # Text is clipped, not wrapped, so an over-long line would simply
+            # run off the edge of the window with no other warning.
+            raise SystemExit(
+                f"banner line is {len(text)} characters, the window fits {MAX_CHARS}:\n"
+                f"  {text!r}\nShorten it in assets/banner.json."
+            )
         dur = max(0.28, len(text) * TYPE_SPEED)
         spans.append({**line, "full": text, "start": t, "end": t + dur, "chars": len(text)})
         t += dur + LINE_GAP
