@@ -194,11 +194,11 @@ worth the hype, or how to make a Linux desktop look good.
 ## Recent activity
 
 <!--START_SECTION:activity-->
-1. ❌ Closed PR [#20](https://github.com/hugosantanna/clo-author/pull/20) in [hugosantanna/clo-author](https://github.com/hugosantanna/clo-author)
-2. 💪 Opened PR [#20](https://github.com/hugosantanna/clo-author/pull/20) in [hugosantanna/clo-author](https://github.com/hugosantanna/clo-author)
-3. 🚀 Published release [v.0.1.0](https://github.com/luviuche/miCuartoRepo/releases/tag/v0.1.0) in [luviuche/miCuartoRepo](https://github.com/luviuche/miCuartoRepo)
-4. 🎉 Merged PR [#2](https://github.com/luviuche/mi-tercer-repo/pull/2) in [luviuche/mi-tercer-repo](https://github.com/luviuche/mi-tercer-repo)
-5. 💪 Opened PR [#2](https://github.com/luviuche/mi-tercer-repo/pull/2) in [luviuche/mi-tercer-repo](https://github.com/luviuche/mi-tercer-repo)
+1. 🎉 Merged PR [#2](https://github.com/luviuche/skills-communicate-using-markdown/pull/2) in [luviuche/skills-communicate-using-markdown](https://github.com/luviuche/skills-communicate-using-markdown)
+2. 💪 Opened PR [#2](https://github.com/luviuche/skills-communicate-using-markdown/pull/2) in [luviuche/skills-communicate-using-markdown](https://github.com/luviuche/skills-communicate-using-markdown)
+3. 🎉 Merged PR [#2](https://github.com/luviuche/skills-introduction-to-github/pull/2) in [luviuche/skills-introduction-to-github](https://github.com/luviuche/skills-introduction-to-github)
+4. 💪 Opened PR [#2](https://github.com/luviuche/skills-introduction-to-github/pull/2) in [luviuche/skills-introduction-to-github](https://github.com/luviuche/skills-introduction-to-github)
+5. ❌ Closed PR [#20](https://github.com/hugosantanna/clo-author/pull/20) in [hugosantanna/clo-author](https://github.com/hugosantanna/clo-author)
 <!--END_SECTION:activity-->
 
 ---
