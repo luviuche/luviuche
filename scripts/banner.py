@@ -17,17 +17,24 @@ from pathlib import Path
 
 import numpy as np
 
-from theme import FONT_MONO, ROOT, Palette, esc, fmt, load_theme, write_pair
+from theme import FONT_MONO, ROOT, Palette, esc, fmt, load_theme, mix, write_pair
 
-W, H = 1080, 400
-CHROME_H = 40
+W, H = 1180, 560
+CHROME_H = 42
 
-PANEL_X, PANEL_Y, PANEL_W, PANEL_H = 44, 68, 300, 300
+# A portrait needs portrait proportions. A square panel either crops the hair
+# or the chin, and shrinks the face until nothing survives the reduction.
+PANEL_X, PANEL_Y, PANEL_W, PANEL_H = 48, 78, 340, 452
 
-TEXT_X = 392
-TEXT_Y0 = 98
-LINE_H = 38
+TEXT_X = 444
+TEXT_Y0 = 172
+LINE_H = 46
 FONT_SIZE = 18
+
+# Ink below this is background noise, not picture. Skipping it is what lets
+# the portrait sit on the panel instead of inside a rectangle of grey dots.
+INK_FLOOR = 0.10
+TONES = 7
 CHAR_W = FONT_SIZE * 0.6  # every monospace fallback in the stack is 0.6em
 
 TYPE_SPEED = 0.042  # seconds per character
@@ -86,8 +93,25 @@ def keyframes(points: list[tuple[float, float]], total: float) -> tuple[str, str
 # --------------------------------------------------------------------------- #
 # dot panel
 # --------------------------------------------------------------------------- #
+def tone_ramp(pal: Palette, steps: int) -> list[str]:
+    """Colours from dim to bright, for mapping ink intensity onto.
+
+    The previous version filled every dot from one diagonal gradient, so a
+    dot's colour said where it sat on the panel rather than how bright it was.
+    That flattens a face: the shading carries the likeness, and a positional
+    gradient throws exactly that away.
+    """
+    low = mix(pal.accent, pal.bg, 0.62)
+    high = mix(pal.accent, pal.text, 0.6)
+    ramp = []
+    for i in range(steps):
+        t = i / max(steps - 1, 1)
+        ramp.append(mix(low, pal.accent, t * 2) if t < 0.5 else mix(pal.accent, high, (t - 0.5) * 2))
+    return ramp
+
+
 def dot_panel(grid: np.ndarray, pal: Palette, total: float, field: float) -> str:
-    """Render the .npy grid as circles, revealed column by column.
+    """Render the ink grid as dots, grouped by tone and wiped in from the left.
 
     The grid is ink, and the same ink is drawn in both themes - light dots on
     the dark background, dark dots on the light one. Which pixels became ink
@@ -95,49 +119,47 @@ def dot_panel(grid: np.ndarray, pal: Palette, total: float, field: float) -> str
     picture rather than on the reader's theme.
     """
     if field > 0:
-        # Every cell keeps a faint dot, so the panel reads as a lit matrix
-        # rather than as a shape floating in empty space.
+        # Every cell keeps a faint dot, so the panel reads as a lit matrix.
+        # A monogram or a logo wants this; a portrait does not, because the
+        # grid then competes with the face for attention.
         grid = np.maximum(grid, field)
 
     rows, cols = grid.shape
     cell = min(PANEL_W / cols, PANEL_H / rows)
     ox = PANEL_X + (PANEL_W - cell * cols) / 2
     oy = PANEL_Y + (PANEL_H - cell * rows) / 2
-    r_max = cell * 0.46
+    r_max = cell * 0.52
 
-    # One <animate> per column instead of per dot: ~42 animations rather than
-    # ~1900, which is the difference between a 70 KB file and a 2 MB one.
-    sweep = 1.9
-    buckets: list[list[str]] = [[] for _ in range(cols)]
+    # One group per tone rather than per dot: the fill is written seven times
+    # instead of several thousand, which is what keeps a high-resolution
+    # portrait to a sane file size.
+    ramp = tone_ramp(pal, TONES)
+    buckets: list[list[str]] = [[] for _ in range(TONES)]
     for r in range(rows):
         for c in range(cols):
             v = float(grid[r, c])
-            if v < 0.07:
+            if v < INK_FLOOR:
                 continue
-            radius = 0.55 + v * (r_max - 0.55)
-            cx = ox + (c + 0.5) * cell
-            cy = oy + (r + 0.5) * cell
-            buckets[c].append(
-                f'<circle cx="{fmt(cx)}" cy="{fmt(cy)}" r="{fmt(radius)}" opacity="{fmt(v * 0.92 + 0.08)}"/>'
+            t = (v - INK_FLOOR) / (1.0 - INK_FLOOR)
+            buckets[min(int(t * TONES), TONES - 1)].append(
+                f'<circle cx="{fmt(ox + (c + 0.5) * cell, 1)}" cy="{fmt(oy + (r + 0.5) * cell, 1)}"'
+                f' r="{fmt(0.35 + t * (r_max - 0.35))}"/>'
             )
 
-    out = [f'<g fill="url(#dots-{pal.name})">']
-    for c, dots in enumerate(buckets):
-        if not dots:
-            continue
-        appear = LEAD_IN * 0.3 + (c / max(cols - 1, 1)) * sweep
-        vals, times = keyframes(
-            [(appear, 0.0), (appear + 0.35, 1.0), (total - FADE, 1.0), (total, 0.0)], total
-        )
-        # Base attributes hold the FINISHED state on purpose: a renderer with
-        # no SMIL support then shows the completed banner instead of a blank
-        # box, while browsers animate straight over these values.
-        out.append(
-            f'<g opacity="1"><animate attributeName="opacity" dur="{fmt(total)}s" '
-            f'repeatCount="indefinite" values="{vals}" keyTimes="{times}"/>'
-            + "".join(dots)
-            + "</g>"
-        )
+    wipe = f"wipe-{pal.name}"
+    reveal, times = keyframes(
+        [(LEAD_IN * 0.2, 0.0), (LEAD_IN * 0.2 + 2.1, PANEL_W), (total - FADE, PANEL_W), (total, 0.0)],
+        total,
+    )
+    out = [
+        f'<clipPath id="{wipe}"><rect x="{PANEL_X}" y="{PANEL_Y}" height="{PANEL_H}" width="{PANEL_W}">'
+        f'<animate attributeName="width" dur="{fmt(total)}s" repeatCount="indefinite" '
+        f'values="{reveal}" keyTimes="{times}"/></rect></clipPath>',
+        f'<g clip-path="url(#{wipe})">',
+    ]
+    for colour, dots in zip(ramp, buckets):
+        if dots:
+            out.append(f'<g fill="{colour}">' + "".join(dots) + "</g>")
     out.append("</g>")
     return "".join(out)
 
@@ -220,11 +242,6 @@ def render(cfg: dict, grid: np.ndarray, pal: Palette) -> str:
 
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" \
 role="img" aria-label="{title} - Luis Viuche">
-<defs>
-<linearGradient id="dots-{pal.name}" x1="0" y1="0" x2="1" y2="1">
-<stop offset="0" stop-color="{pal.accent}"/><stop offset="1" stop-color="{pal.text}"/>
-</linearGradient>
-</defs>
 <rect x="1" y="1" width="{W - 2}" height="{H - 2}" rx="14" fill="{pal.bg}" stroke="{pal.border}"/>
 <path d="M1 15a14 14 0 0 1 14-14h{W - 30}a14 14 0 0 1 14 14v{CHROME_H - 15}H1z" fill="{pal.panel}"/>
 <line x1="1" y1="{CHROME_H}" x2="{W - 1}" y2="{CHROME_H}" stroke="{pal.border}"/>

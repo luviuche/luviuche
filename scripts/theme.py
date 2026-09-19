@@ -37,6 +37,20 @@ def load_theme(path: Path | None = None) -> dict[str, Palette]:
     return {name: Palette(name, data[name], accent) for name in ("dark", "light")}
 
 
+def _hex_to_rgb(value: str) -> tuple[int, int, int]:
+    value = value.lstrip("#")
+    return tuple(int(value[i : i + 2], 16) for i in (0, 2, 4))  # type: ignore[return-value]
+
+
+def mix(a: str, b: str, t: float) -> str:
+    """Blend two hex colours, t=0 gives a and t=1 gives b."""
+    ra, ga, ba = _hex_to_rgb(a)
+    rb, gb, bb = _hex_to_rgb(b)
+    return "#{:02x}{:02x}{:02x}".format(
+        round(ra + (rb - ra) * t), round(ga + (gb - ga) * t), round(ba + (bb - ba) * t)
+    )
+
+
 def esc(text: str) -> str:
     """Escape text for an SVG text node."""
     return (

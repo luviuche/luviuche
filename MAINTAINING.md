@@ -72,9 +72,9 @@ themes:
 "source": {
   "image": "assets/source/portrait.jpeg",
   "file":  "assets/source/cache/portrait.npy",
-  "field": 0.1,
+  "field": 0,
   "dotify": { "invert": true, "crop": "...", "no-square": true,
-              "cols": 48, "rows": 64, "gamma": 0.8, "vignette": 0.55 }
+              "cols": 84, "rows": 112, "gamma": 0.8, "vignette": 0.55 }
 }
 ```
 
@@ -92,12 +92,26 @@ is no resolution to waste on a wall. With `no-square`, the crop's aspect must
 match `cols:rows` or the face stretches.
 
 **`cols` / `rows`** — resolution, and the setting that matters most. 34x46 gave
-a silhouette with no face in it; 48x64 is where glasses and eyes survive. Going
-higher costs file size: every cell is one `<circle>`.
+a silhouette with no face in it, 48x64 a blocky approximation; 84x112 is where
+it reads as a photograph. Aim for about three screen pixels per dot at the
+width GitHub renders the README, which for this panel is 84 columns. Higher is
+not better - past that the dots stop resolving and turn to mush.
+
+**`field`** (outside the `dotify` block) — minimum ink in every cell. Keep it
+at `0` for a portrait: a faint background grid competes with the face for
+attention. A monogram or a logo wants about `0.1`, which gives the panel its
+lit-matrix look.
 
 **`vignette`** — where the edge falloff starts, 0 to disable. It fades the room
 away so the face is what is lit, and costs nothing compared to running a
 segmentation model.
+
+Dots are coloured by intensity, through a seven-step ramp from a dimmed accent
+up to a near-white one, and grouped so the fill is written seven times rather
+than seven thousand. An earlier version filled them from one diagonal
+gradient, which made a dot's colour depend on where it sat rather than how
+bright it was - and since the shading is what carries a likeness, it flattened
+the face.
 
 When a photo will not read, the order to try things in is: resolution first,
 then crop, then polarity, then gamma. Render both themes and look - a portrait
