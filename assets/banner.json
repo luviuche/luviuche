@@ -10,14 +10,14 @@
     "dotify": {
       "invert": true,
       "_invert_help": "true = ink where the photo is DARK. Right for a dark-haired subject on a pale wall; it also keeps the wall out of the panel for free.",
-      "crop": "0.24,0.198,0.75,0.709",
-      "_crop_help": "left,top,right,bottom as fractions, framing the head between the window blind and the monitor. Its aspect must match cols:rows.",
+      "crop": "0.1471,0.1148,0.8113,0.7790",
+      "_crop_help": "left,top,right,bottom as fractions, centred on the face. Pulled back far enough to clear the chin; any wider and the monitor and the window blind start creeping into frame.",
       "no-square": true,
       "cols": 84,
       "rows": 112,
       "_shape_help": "84x112 puts roughly three screen pixels under each dot at the width GitHub renders the README. Lower and the face turns to blocks; higher and it turns to mush.",
       "gamma": 0.8,
-      "vignette": 0.55,
+      "vignette": 0.48,
       "_vignette_help": "Fades ink toward the edges so the room falls away and the face is what is lit."
     }
   },
