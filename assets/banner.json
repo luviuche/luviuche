@@ -2,11 +2,24 @@
   "_comment": "Content of the hero banner. Edit the lines, push, and the Banner workflow redraws both themes. 'cmd' lines get the accent prompt, 'hi' is a highlighted answer, 'out' is secondary text.",
   "title": "profile.sh --live",
   "source": {
-    "file": "assets/source/cache/monogram.npy",
-    "mode": "glyph",
-    "_mode_help": "'photo' inverts on the light theme (ink where the picture is dark). 'glyph' keeps the same shape in both themes.",
+    "_comment": "'image' is the original; build.py runs it through dotify into 'file'. Drop 'image' to fall back to the monogram cache.",
+    "image": "assets/source/portrait.jpeg",
+    "file": "assets/source/cache/portrait.npy",
     "field": 0.1,
-    "_field_help": "Minimum ink in every cell, 0 for none. Gives the panel its lit-matrix background."
+    "_field_help": "Minimum ink in every cell, 0 for none. Gives the panel its lit-matrix background.",
+    "dotify": {
+      "invert": true,
+      "_invert_help": "true = ink where the photo is DARK. Right for a dark-haired subject on a pale wall; it also keeps the wall out of the panel for free.",
+      "crop": "0.24,0.198,0.75,0.709",
+      "_crop_help": "left,top,right,bottom as fractions, framing the head between the window blind and the monitor. Its aspect must match cols:rows.",
+      "no-square": true,
+      "cols": 48,
+      "rows": 64,
+      "_shape_help": "48x64 is the point where glasses and eyes survive the reduction; 34x46 only gave a silhouette.",
+      "gamma": 0.8,
+      "vignette": 0.55,
+      "_vignette_help": "Fades ink toward the edges so the room falls away and the face is what is lit."
+    }
   },
   "cycle_hold": 3.2,
   "lines": [

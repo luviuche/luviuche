@@ -44,10 +44,15 @@ commits the result. To preview before pushing:
 
 ```bash
 pip install -r scripts/requirements.txt
-python scripts/build.py              # everything
-python scripts/build.py --skip-cards # offline: no GitHub API calls
+python scripts/build.py --skip-cards # what you normally want
 open preview.html                    # both themes, animations running
 ```
+
+Use `--skip-cards` locally. A plain `python scripts/build.py` rebuilds the stat
+and language cards too, and without a token on your machine they come out
+worse than the ones CI committed - the stat card loses its contribution and
+streak tiles. Committing that would downgrade the live profile until the next
+nightly run. Those two files belong to the schedule; leave them alone.
 
 ### One consequence worth knowing
 
@@ -57,22 +62,46 @@ trigger it by hand: Actions -> Assets -> Run workflow. Edits to `banner.json`,
 `skills.json`, `langmix.json` and `theme.json` are unaffected and redraw on
 push as usual.
 
-## Using a real photo in the banner
+## The banner portrait
 
-The dot panel currently renders an `LV` monogram. To use a portrait:
+`assets/banner.json` describes the whole picture pipeline. `build.py` reads the
+`source` block, runs the original photo through `dotify.py`, and redraws both
+themes:
 
-1. Save the photo as `assets/source/portrait.jpg` (or `.png`). Front-facing
-   with strong contrast works best - the image is reduced to roughly 1,900
-   dots, so fine detail disappears.
-2. In `assets/banner.json`, set:
-   ```json
-   "source": { "file": "assets/source/cache/portrait.npy", "mode": "photo", "field": 0.1 }
-   ```
-3. Push. `scripts/build.py` regenerates the dot cache and both banners.
+```json
+"source": {
+  "image": "assets/source/portrait.jpeg",
+  "file":  "assets/source/cache/portrait.npy",
+  "field": 0.1,
+  "dotify": { "invert": true, "crop": "...", "no-square": true,
+              "cols": 48, "rows": 64, "gamma": 0.8, "vignette": 0.55 }
+}
+```
 
-`mode` matters. `photo` inverts on the light theme so ink lands where the
-picture is dark, the way a printed halftone works. `glyph` keeps the same
-shape in both themes, which is what a monogram or a logo wants.
+Drop `image` and it falls back to the `LV` monogram cache. Swapping in a new
+photo means replacing the file and retuning four numbers:
+
+**`invert`** — the grid stores *ink*, not brightness, and the same ink is drawn
+in both themes. `invert: true` puts ink where the photo is dark, which is right
+for a dark-haired subject against a pale wall. A face lit against a dark
+background wants `false`. Get this backwards and you get a negative.
+
+**`crop`** — `left,top,right,bottom` as fractions. Frame the head. A centre
+crop of a phone photo keeps half a room, and at a couple of thousand dots there
+is no resolution to waste on a wall. With `no-square`, the crop's aspect must
+match `cols:rows` or the face stretches.
+
+**`cols` / `rows`** — resolution, and the setting that matters most. 34x46 gave
+a silhouette with no face in it; 48x64 is where glasses and eyes survive. Going
+higher costs file size: every cell is one `<circle>`.
+
+**`vignette`** — where the edge falloff starts, 0 to disable. It fades the room
+away so the face is what is lit, and costs nothing compared to running a
+segmentation model.
+
+When a photo will not read, the order to try things in is: resolution first,
+then crop, then polarity, then gamma. Render both themes and look - a portrait
+that works on dark can be mud on light.
 
 ## Why the charts are self-hosted
 

@@ -17,7 +17,6 @@ ROOT = Path(__file__).resolve().parent.parent
 SCRIPTS = ROOT / "scripts"
 CACHE = ROOT / "assets" / "source" / "cache"
 
-PORTRAIT_SUFFIXES = (".png", ".jpg", ".jpeg", ".webp")
 MONOGRAM = "LV"
 
 # Repos whose bytes would distort the language card. Large vendored or
@@ -39,14 +38,6 @@ def run(*args: str, tolerate: tuple[int, ...] = ()) -> bool:
     return True
 
 
-def portrait_source() -> Path | None:
-    for suffix in PORTRAIT_SUFFIXES:
-        candidate = ROOT / "assets" / "source" / f"portrait{suffix}"
-        if candidate.exists():
-            return candidate
-    return None
-
-
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--user", default="luviuche")
@@ -55,20 +46,28 @@ def main() -> None:
 
     CACHE.mkdir(parents=True, exist_ok=True)
 
-    # 1. Dot-matrix caches. The monogram is the fallback; a portrait is used
-    #    the moment one is dropped into assets/source/.
+    # 1. Dot-matrix caches. The monogram is always available as a fallback;
+    #    the portrait is rebuilt from whatever banner.json points at.
     run(str(SCRIPTS / "dotify.py"), "--monogram", MONOGRAM, "-o", str(CACHE / "monogram.npy"))
-    if photo := portrait_source():
-        run(str(SCRIPTS / "dotify.py"), str(photo), "-o", str(CACHE / "portrait.npy"), "--gamma", "0.9")
 
     banner_cfg = json.loads((ROOT / "assets" / "banner.json").read_text(encoding="utf-8"))
-    using = banner_cfg["source"]["file"]
-    if photo and "portrait" not in using:
-        print(
-            f"\n  note: {photo.name} is present but assets/banner.json still points at {using}.\n"
-            '        Set source.file to "assets/source/cache/portrait.npy" and source.mode to '
-            '"photo" to use it.'
-        )
+    source = banner_cfg["source"]
+    if image := source.get("image"):
+        image_path = ROOT / image
+        if not image_path.exists():
+            raise SystemExit(
+                f"assets/banner.json points at {image}, which does not exist.\n"
+                "Put the photo there, or remove 'image' to fall back to the monogram."
+            )
+        opts = source.get("dotify", {})
+        cmd = [str(SCRIPTS / "dotify.py"), str(image_path), "-o", str(ROOT / source["file"])]
+        for flag in ("invert", "no-square"):
+            if opts.get(flag):
+                cmd.append(f"--{flag}")
+        for flag in ("crop", "gamma", "cols", "rows", "vignette"):
+            if flag in opts:
+                cmd += [f"--{flag}", str(opts[flag])]
+        run(*cmd)
 
     # 2. The hero banner.
     run(str(SCRIPTS / "banner.py"))

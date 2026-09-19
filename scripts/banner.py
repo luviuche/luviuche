@@ -86,11 +86,14 @@ def keyframes(points: list[tuple[float, float]], total: float) -> tuple[str, str
 # --------------------------------------------------------------------------- #
 # dot panel
 # --------------------------------------------------------------------------- #
-def dot_panel(grid: np.ndarray, pal: Palette, mode: str, total: float, field: float) -> str:
-    """Render the .npy grid as circles, revealed column by column."""
-    if mode == "photo" and not pal.is_dark:
-        # Ink goes where the picture is dark, the way a printed halftone works.
-        grid = 1.0 - grid
+def dot_panel(grid: np.ndarray, pal: Palette, total: float, field: float) -> str:
+    """Render the .npy grid as circles, revealed column by column.
+
+    The grid is ink, and the same ink is drawn in both themes - light dots on
+    the dark background, dark dots on the light one. Which pixels became ink
+    was decided once, by dotify's --invert, because that depends on the
+    picture rather than on the reader's theme.
+    """
     if field > 0:
         # Every cell keeps a faint dot, so the panel reads as a lit matrix
         # rather than as a shape floating in empty space.
@@ -227,7 +230,7 @@ role="img" aria-label="{title} - Luis Viuche">
 <line x1="1" y1="{CHROME_H}" x2="{W - 1}" y2="{CHROME_H}" stroke="{pal.border}"/>
 {chrome}
 <text x="94" y="{CHROME_H / 2 + 4.5}" font-family="{FONT_MONO}" font-size="12.5" fill="{pal.muted}">{title}</text>
-{dot_panel(grid, pal, cfg["source"].get("mode", "glyph"), total, cfg["source"].get("field", 0.0))}
+{dot_panel(grid, pal, total, cfg["source"].get("field", 0.0))}
 {terminal(spans, pal, total)}
 </svg>"""
 
