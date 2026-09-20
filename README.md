@@ -52,7 +52,7 @@ part where a model does real work inside a service instead of just answering que
   AI at Platzi — engineering fundamentals, Git, the terminal and SQL are behind me, with
   FastAPI, LLM APIs, LangChain and agents ahead.
 - 🤖 **Agents that do real work.** My favourite project so far,
-  [proyecto_redes_estructura](https://github.com/luviuche/proyecto_redes_estructura),
+  [project-network-analyzer](https://github.com/luviuche/project-network-analyzer),
   pairs a directed acyclic graph with a hybrid agent — deterministic rules plus an LLM —
   so the model explains a result it did not invent.
 - 🐧 **Linux desktop customisation.** I run CachyOS and rice my setup the way other
