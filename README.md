@@ -123,9 +123,9 @@ worth the hype, or how to make a Linux desktop look good.
 ## Recent activity
 
 <!--START_SECTION:activity-->
-1. ❌ Closed PR [#20](https://github.com/hugosantanna/clo-author/pull/20) in [hugosantanna/clo-author](https://github.com/hugosantanna/clo-author)
-2. 💪 Opened PR [#20](https://github.com/hugosantanna/clo-author/pull/20) in [hugosantanna/clo-author](https://github.com/hugosantanna/clo-author)
-3. 🚀 Published release [v.0.1.0](https://github.com/luviuche/miCuartoRepo/releases/tag/v0.1.0) in [luviuche/miCuartoRepo](https://github.com/luviuche/miCuartoRepo)
+1. 🎉 Merged PR [#7](https://github.com/luviuche/project-network-analyzer/pull/7) in [luviuche/project-network-analyzer](https://github.com/luviuche/project-network-analyzer)
+2. 💪 Opened PR [#7](https://github.com/luviuche/project-network-analyzer/pull/7) in [luviuche/project-network-analyzer](https://github.com/luviuche/project-network-analyzer)
+3. 🎉 Merged PR [#6](https://github.com/luviuche/project-network-analyzer/pull/6) in [luviuche/project-network-analyzer](https://github.com/luviuche/project-network-analyzer)
 4. 🔒 Closed issue [#3](https://github.com/luviuche/mi-primer-repo/issues/3) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
 5. ℹ️ Assigned issue [#5](https://github.com/luviuche/mi-primer-repo/issues/5) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
 <!--END_SECTION:activity-->
