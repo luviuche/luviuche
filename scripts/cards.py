@@ -31,6 +31,9 @@ EX_TEMPFAIL = 75
 class GitHubUnavailable(RuntimeError):
     pass
 
+STREAK_FLOOR_CURRENT = 7
+STREAK_FLOOR_LONGEST = 14
+
 CARD_W, CARD_H = 470, 168
 STAT_W = 470
 STAT_ROW_H = 46
@@ -343,8 +346,11 @@ def main() -> None:
         current, longest = streaks(contributions["days"])
         candidates += [
             ("Contributions (1y)", contributions["total"], 1),
-            ("Current streak", current, 1),
-            ("Longest streak", longest, 1),
+            # Streaks only earn their tile once they are worth reporting. A
+            # "longest streak: 7" tells the reader you have never coded eight
+            # days running, which is the opposite of what the tile is for.
+            ("Current streak", current, STREAK_FLOOR_CURRENT),
+            ("Longest streak", longest, STREAK_FLOOR_LONGEST),
         ]
     candidates += [
         ("Public repos", user["public_repos"], 1),

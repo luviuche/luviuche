@@ -51,9 +51,10 @@ part where a model does real work inside a service instead of just answering que
 - 🐍 **Python is the other half.** I'm specialising in backend development with applied
   AI at Platzi — engineering fundamentals, Git, the terminal and SQL are behind me, with
   FastAPI, LLM APIs, LangChain and agents ahead.
-- 🤖 **Agents that do real work.** My favourite project so far pairs a directed acyclic
-  graph with a hybrid agent — deterministic rules plus an LLM — so the model explains a
-  result it did not invent.
+- 🤖 **Agents that do real work.** My favourite project so far,
+  [proyecto_redes_estructura](https://github.com/luviuche/proyecto_redes_estructura),
+  pairs a directed acyclic graph with a hybrid agent — deterministic rules plus an LLM —
+  so the model explains a result it did not invent.
 - 🐧 **Linux desktop customisation.** I run CachyOS and rice my setup the way other
   people rearrange furniture.
 - 🎯 **Looking for my first internship.** If you're hiring juniors for backend work, I'd
