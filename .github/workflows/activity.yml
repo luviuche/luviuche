@@ -30,6 +30,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           COMMIT_MSG: "chore: update recent activity"
-          MAX_LINES: 5
+          # Three, not five. Events from deleted repos linger in the GitHub
+          # feed, so a shorter list shows fewer dead links and flushes itself
+          # after three new pull requests instead of five.
+          MAX_LINES: 3
           COMMIT_NAME: github-actions[bot]
           COMMIT_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
