@@ -5,7 +5,6 @@ coursework and one-off assignments outweigh the work that actually represents
 someone, so the numbers live in assets/*.json and a human edits them.
 
     python scripts/radar.py --data assets/skills.json -o assets/radar
-    python scripts/radar.py --data assets/langmix.json -o assets/radar-langs --values
 """
 from __future__ import annotations
 

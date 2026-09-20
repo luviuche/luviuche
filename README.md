@@ -78,30 +78,17 @@ worth the hype, or how to make a Linux desktop look good.
 
 ## Signals
 
-<table>
-<tr>
-<td width="50%" align="center" valign="middle">
-
-<!-- Self-rated. Edit assets/skills.json and the Assets workflow redraws it. -->
+<!-- Self-rated, and the only chart here that is. Edit assets/skills.json and
+     the Assets workflow redraws it. There used to be a second, hand-authored
+     language radar beside this one; it was dropped because the measured
+     language card below already answers that question, and two invented
+     charts disagreeing with one measured chart cost all three their
+     credibility. -->
 <picture>
   <source media="(prefers-color-scheme: dark)"  srcset="assets/radar-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="assets/radar-light.svg">
-  <img src="assets/radar-dark.svg" width="100%" alt="Skill radar">
+  <img src="assets/radar-dark.svg" width="470" alt="Skill radar">
 </picture>
-
-</td>
-<td width="50%" align="center" valign="middle">
-
-<!-- Hand-authored language stack. Edit assets/langmix.json. -->
-<picture>
-  <source media="(prefers-color-scheme: dark)"  srcset="assets/radar-langs-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="assets/radar-langs-light.svg">
-  <img src="assets/radar-langs-dark.svg" width="100%" alt="Language radar">
-</picture>
-
-</td>
-</tr>
-</table>
 
 </div>
 

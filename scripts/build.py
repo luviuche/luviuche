@@ -74,9 +74,9 @@ def main() -> None:
     # 2. The hero banner.
     run(str(SCRIPTS / "banner.py"))
 
-    # 3. Radars, from hand-authored JSON.
+    # 3. The skill radar, from hand-authored JSON. A language radar used to
+    #    live here too; the measured language card makes it redundant.
     run(str(SCRIPTS / "radar.py"), "--data", "assets/skills.json", "-o", "assets/radar")
-    run(str(SCRIPTS / "radar.py"), "--data", "assets/langmix.json", "-o", "assets/radar-langs", "--values")
 
     # 4. Stats and language mix, straight from the GitHub API.
     if not args.skip_cards:

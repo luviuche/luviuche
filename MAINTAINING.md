@@ -7,7 +7,6 @@ scripts are the renderer, and the `Assets` workflow keeps the two in sync.
 assets/theme.json      colours for both themes, and the accent
 assets/banner.json     the terminal lines, and the icons in the dot panel
 assets/skills.json     the self-rated skill radar
-assets/langmix.json    the hand-authored language radar
 ```
 
 ## What updates itself, and what does not
@@ -20,21 +19,18 @@ This matters: half the charts are live and half are not.
 | `card-languages-*` | GitHub API | Yes, daily |
 | `card-<repo>-*` | GitHub API + `projects.json` | Stars, forks and dates yes; the blurb is yours |
 | `radar-*` | `skills.json` | **No - a human writes these numbers** |
-| `radar-langs-*` | `langmix.json` | **No - a human writes these numbers** |
 | `banner-*` | `banner.json` | No |
 
-The two radars are a self-assessment. The daily workflow redraws the picture but
+The radar is a self-assessment. The daily workflow redraws the picture but
 never touches the values, so they stay exactly as written until someone edits
 the JSON. Treat them like a CV line: worth revisiting every few months, and
 stale if you finish a Spring course and the Java number never moves.
 
-That is the point of having both. The radar says what you reach for; the
-language card, computed from real code, says what you have actually written.
-When those two disagree, the disagreement is the interesting part.
-
-If you would rather the language radar be automatic, `scripts/cards.py` already
-computes the numbers - `langmix.json` could be generated from the same call
-instead of hand-written.
+There was a second radar here, hand-authored from the same kind of guesswork,
+plotting languages. It was dropped: the language card below it is computed from
+real code, and a made-up chart sitting next to a measured one that disagrees
+costs both of them their credibility. The radar now covers only what no metric
+captures - API design, algorithms, CI/CD - and anything measurable is measured.
 
 ## Changing something
 
@@ -58,7 +54,7 @@ nightly run. Those two files belong to the schedule; leave them alone.
 Because pushes skip the API-backed cards, editing `projects.json` does not
 redraw the project cards straight away. Either wait for the nightly run, or
 trigger it by hand: Actions -> Assets -> Run workflow. Edits to `banner.json`,
-`skills.json`, `langmix.json` and `theme.json` are unaffected and redraw on
+`skills.json` and `theme.json` are unaffected and redraw on
 push as usual.
 
 ## The banner's dot panel
