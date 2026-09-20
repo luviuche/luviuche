@@ -2,23 +2,38 @@
   "_comment": "Content of the hero banner. Edit the lines, push, and the Banner workflow redraws both themes. 'cmd' lines get the accent prompt, 'hi' is a highlighted answer, 'out' is secondary text.",
   "title": "profile.sh --live",
   "source": {
-    "_comment": "'image' is the original; build.py runs it through dotify into 'file'. Drop 'image' to fall back to the monogram cache.",
-    "image": "assets/source/portrait.jpeg",
-    "file": "assets/source/cache/portrait.npy",
-    "field": 0,
-    "_field_help": "Minimum ink in every cell. 0 for a portrait, so the face sits on the panel instead of inside a rectangle of grey dots. A monogram wants ~0.1.",
+    "_comment": "Frames cross-fade in order on their own loop. Add or reorder them freely; grab new icons with `python scripts/fetch_icons.py <slug>`.",
+    "field": 0.13,
+    "_field_help": "Minimum ink in every cell, drawn once as a static backdrop. Gives the panel its lit-matrix look; set 0 to have the icons float on bare background.",
+    "frame_seconds": 2.4,
+    "frames": [
+      {
+        "image": "assets/source/icons/linux.png",
+        "file": "assets/source/cache/linux.npy"
+      },
+      {
+        "image": "assets/source/icons/openjdk.png",
+        "file": "assets/source/cache/openjdk.npy"
+      },
+      {
+        "image": "assets/source/icons/python.png",
+        "file": "assets/source/cache/python.npy"
+      },
+      {
+        "image": "assets/source/icons/spring.png",
+        "file": "assets/source/cache/spring.npy"
+      },
+      {
+        "image": "assets/source/icons/gnubash.png",
+        "file": "assets/source/cache/gnubash.npy"
+      }
+    ],
     "dotify": {
-      "invert": true,
-      "_invert_help": "true = ink where the photo is DARK. Right for a dark-haired subject on a pale wall; it also keeps the wall out of the panel for free.",
-      "crop": "0.1471,0.1148,0.8113,0.7790",
-      "_crop_help": "left,top,right,bottom as fractions, centred on the face. Pulled back far enough to clear the chin; any wider and the monitor and the window blind start creeping into frame.",
-      "no-square": true,
-      "cols": 84,
-      "rows": 112,
-      "_shape_help": "84x112 puts roughly three screen pixels under each dot at the width GitHub renders the README. Lower and the face turns to blocks; higher and it turns to mush.",
-      "gamma": 0.8,
-      "vignette": 0.48,
-      "_vignette_help": "Fades ink toward the edges so the room falls away and the face is what is lit."
+      "cols": 76,
+      "rows": 76,
+      "_shape_help": "Square, to match the panel. Logos are simple shapes, so this resolves them cleanly.",
+      "no-autocontrast": true,
+      "_autocontrast_help": "Logos are flat silhouettes - there is no tonal range to stretch, and stretching only amplifies the anti-aliased edge."
     }
   },
   "cycle_hold": 3.2,

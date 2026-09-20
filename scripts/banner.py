@@ -19,16 +19,15 @@ import numpy as np
 
 from theme import FONT_MONO, ROOT, Palette, esc, fmt, load_theme, mix, write_pair
 
-W, H = 1180, 560
+W, H = 1180, 462
 CHROME_H = 42
 
-# A portrait needs portrait proportions. A square panel either crops the hair
-# or the chin, and shrinks the face until nothing survives the reduction.
-PANEL_X, PANEL_Y, PANEL_W, PANEL_H = 48, 78, 340, 452
+# Square, because logos are square. A portrait would want this taller.
+PANEL_X, PANEL_Y, PANEL_W, PANEL_H = 48, 76, 352, 352
 
-TEXT_X = 444
-TEXT_Y0 = 172
-LINE_H = 46
+TEXT_X = 452
+TEXT_Y0 = 140
+LINE_H = 42
 FONT_SIZE = 18
 
 # Ink below this is background noise, not picture. Skipping it is what lets
@@ -93,46 +92,18 @@ def keyframes(points: list[tuple[float, float]], total: float) -> tuple[str, str
 # --------------------------------------------------------------------------- #
 # dot panel
 # --------------------------------------------------------------------------- #
-def tone_ramp(pal: Palette, steps: int) -> list[str]:
-    """Colours from dim to bright, for mapping ink intensity onto.
-
-    The previous version filled every dot from one diagonal gradient, so a
-    dot's colour said where it sat on the panel rather than how bright it was.
-    That flattens a face: the shading carries the likeness, and a positional
-    gradient throws exactly that away.
-    """
-    low = mix(pal.accent, pal.bg, 0.62)
-    high = mix(pal.accent, pal.text, 0.6)
-    ramp = []
-    for i in range(steps):
-        t = i / max(steps - 1, 1)
-        ramp.append(mix(low, pal.accent, t * 2) if t < 0.5 else mix(pal.accent, high, (t - 0.5) * 2))
-    return ramp
-
-
-def dot_panel(grid: np.ndarray, pal: Palette, total: float, field: float) -> str:
-    """Render the ink grid as dots, grouped by tone and wiped in from the left.
-
-    The grid is ink, and the same ink is drawn in both themes - light dots on
-    the dark background, dark dots on the light one. Which pixels became ink
-    was decided once, by dotify's --invert, because that depends on the
-    picture rather than on the reader's theme.
-    """
+def _dots(grid: np.ndarray, pal: Palette, field: float, geom: tuple[float, float, float]) -> str:
+    """Tone-grouped circles for one frame."""
     if field > 0:
         # Every cell keeps a faint dot, so the panel reads as a lit matrix.
-        # A monogram or a logo wants this; a portrait does not, because the
-        # grid then competes with the face for attention.
         grid = np.maximum(grid, field)
 
-    rows, cols = grid.shape
-    cell = min(PANEL_W / cols, PANEL_H / rows)
-    ox = PANEL_X + (PANEL_W - cell * cols) / 2
-    oy = PANEL_Y + (PANEL_H - cell * rows) / 2
+    cell, ox, oy = geom
     r_max = cell * 0.52
+    rows, cols = grid.shape
 
     # One group per tone rather than per dot: the fill is written seven times
-    # instead of several thousand, which is what keeps a high-resolution
-    # portrait to a sane file size.
+    # instead of several thousand, which is what keeps this to a sane size.
     ramp = tone_ramp(pal, TONES)
     buckets: list[list[str]] = [[] for _ in range(TONES)]
     for r in range(rows):
@@ -146,21 +117,101 @@ def dot_panel(grid: np.ndarray, pal: Palette, total: float, field: float) -> str
                 f' r="{fmt(0.35 + t * (r_max - 0.35))}"/>'
             )
 
-    wipe = f"wipe-{pal.name}"
-    reveal, times = keyframes(
-        [(LEAD_IN * 0.2, 0.0), (LEAD_IN * 0.2 + 2.1, PANEL_W), (total - FADE, PANEL_W), (total, 0.0)],
-        total,
+    return "".join(
+        f'<g fill="{colour}">' + "".join(dots) + "</g>"
+        for colour, dots in zip(ramp, buckets)
+        if dots
     )
-    out = [
-        f'<clipPath id="{wipe}"><rect x="{PANEL_X}" y="{PANEL_Y}" height="{PANEL_H}" width="{PANEL_W}">'
-        f'<animate attributeName="width" dur="{fmt(total)}s" repeatCount="indefinite" '
-        f'values="{reveal}" keyTimes="{times}"/></rect></clipPath>',
-        f'<g clip-path="url(#{wipe})">',
-    ]
-    for colour, dots in zip(ramp, buckets):
-        if dots:
-            out.append(f'<g fill="{colour}">' + "".join(dots) + "</g>")
-    out.append("</g>")
+
+
+def tone_ramp(pal: Palette, steps: int) -> list[str]:
+    """Colours from dim to bright, for mapping ink intensity onto.
+
+    An earlier version filled every dot from one diagonal gradient, so a dot's
+    colour said where it sat on the panel rather than how bright it was. That
+    flattens an image: the shading carries the shape, and a positional
+    gradient throws exactly that away.
+    """
+    low = mix(pal.accent, pal.bg, 0.62)
+    high = mix(pal.accent, pal.text, 0.6)
+    ramp = []
+    for i in range(steps):
+        t = i / max(steps - 1, 1)
+        ramp.append(mix(low, pal.accent, t * 2) if t < 0.5 else mix(pal.accent, high, (t - 0.5) * 2))
+    return ramp
+
+
+def dot_panel(
+    grids: list[np.ndarray], pal: Palette, total: float, field: float, frame_seconds: float
+) -> str:
+    """Draw the dot panel: one still image, or several cross-fading.
+
+    The grids are ink, and the same ink is drawn in both themes - light dots
+    on the dark background, dark dots on the light one. Which pixels became
+    ink was decided once, by dotify, because that depends on the picture
+    rather than on the reader's theme.
+
+    A single frame gets a wipe reveal tied to the terminal's cycle. Several
+    frames cross-fade on a cycle of their own, deliberately not locked to the
+    typing: two loops of different lengths keep the banner from looking like
+    it restarts on a beat.
+    """
+    rows, cols = grids[0].shape
+    cell = min(PANEL_W / cols, PANEL_H / rows)
+    geom = (cell, PANEL_X + (PANEL_W - cell * cols) / 2, PANEL_Y + (PANEL_H - cell * rows) / 2)
+
+    if len(grids) == 1:
+        wipe = f"wipe-{pal.name}"
+        reveal, times = keyframes(
+            [(LEAD_IN * 0.2, 0.0), (LEAD_IN * 0.2 + 2.1, PANEL_W),
+             (total - FADE, PANEL_W), (total, 0.0)],
+            total,
+        )
+        return (
+            f'<clipPath id="{wipe}"><rect x="{PANEL_X}" y="{PANEL_Y}" height="{PANEL_H}" '
+            f'width="{PANEL_W}"><animate attributeName="width" dur="{fmt(total)}s" '
+            f'repeatCount="indefinite" values="{reveal}" keyTimes="{times}"/></rect></clipPath>'
+            f'<g clip-path="url(#{wipe})">{_dots(grids[0], pal, field, geom)}</g>'
+        )
+
+    cycle = frame_seconds * len(grids)
+    fade = min(0.5, frame_seconds * 0.28)
+
+    # The lit-matrix background is drawn once, behind everything. Giving each
+    # frame its own copy would make the whole grid pulse every time the icons
+    # cross-fade, which reads as a flicker rather than as a panel.
+    #
+    # Every one of its cells is the same dot, so it is a <pattern> tile rather
+    # than several thousand identical <circle> elements - worth about 190 KB.
+    out = []
+    if field > 0:
+        cell, ox, oy = geom
+        t = (field - INK_FLOOR) / (1.0 - INK_FLOOR)
+        radius = 0.35 + t * (cell * 0.52 - 0.35)
+        colour = tone_ramp(pal, TONES)[min(int(t * TONES), TONES - 1)]
+        out.append(
+            f'<pattern id="grid-{pal.name}" x="{fmt(ox)}" y="{fmt(oy)}" width="{fmt(cell, 4)}" '
+            f'height="{fmt(cell, 4)}" patternUnits="userSpaceOnUse">'
+            f'<circle cx="{fmt(cell / 2, 4)}" cy="{fmt(cell / 2, 4)}" r="{fmt(radius)}" fill="{colour}"/>'
+            f'</pattern>'
+            f'<rect x="{fmt(ox)}" y="{fmt(oy)}" width="{fmt(cell * cols)}" '
+            f'height="{fmt(cell * rows)}" fill="url(#grid-{pal.name})"/>'
+        )
+        field = 0.0
+
+    for i, grid in enumerate(grids):
+        begin, stop = i * frame_seconds, (i + 1) * frame_seconds
+        vals, times = keyframes(
+            [(begin, 0.0), (begin + fade, 1.0), (stop - fade, 1.0), (stop, 0.0)], cycle
+        )
+        # The first frame is visible in the base attributes so a renderer with
+        # no SMIL support shows an icon rather than an empty panel.
+        out.append(
+            f'<g opacity="{1 if i == 0 else 0}"><animate attributeName="opacity" dur="{fmt(cycle)}s" '
+            f'repeatCount="indefinite" values="{vals}" keyTimes="{times}"/>'
+            + _dots(grid, pal, field, geom)
+            + "</g>"
+        )
     return "".join(out)
 
 
@@ -230,7 +281,7 @@ def terminal(spans: list[dict], pal: Palette, total: float) -> str:
 
 
 # --------------------------------------------------------------------------- #
-def render(cfg: dict, grid: np.ndarray, pal: Palette) -> str:
+def render(cfg: dict, grids: list[np.ndarray], pal: Palette) -> str:
     spans, total = build_timeline(cfg["lines"], cfg.get("cycle_hold", 3.0))
     title = esc(cfg.get("title", "profile.sh"))
 
@@ -247,7 +298,7 @@ role="img" aria-label="{title} - Luis Viuche">
 <line x1="1" y1="{CHROME_H}" x2="{W - 1}" y2="{CHROME_H}" stroke="{pal.border}"/>
 {chrome}
 <text x="94" y="{CHROME_H / 2 + 4.5}" font-family="{FONT_MONO}" font-size="12.5" fill="{pal.muted}">{title}</text>
-{dot_panel(grid, pal, total, cfg["source"].get("field", 0.0))}
+{dot_panel(grids, pal, total, cfg["source"].get("field", 0.0), cfg["source"].get("frame_seconds", 2.8))}
 {terminal(spans, pal, total)}
 </svg>"""
 
@@ -259,10 +310,16 @@ def main() -> None:
     args = ap.parse_args()
 
     cfg = json.loads(args.config.read_text())
-    grid = np.load(ROOT / cfg["source"]["file"])
+    source = cfg["source"]
+    # Either one still image, or a list of frames that cross-fade.
+    files = [f["file"] for f in source["frames"]] if "frames" in source else [source["file"]]
+    grids = [np.load(ROOT / f) for f in files]
+    shapes = {g.shape for g in grids}
+    if len(shapes) > 1:
+        raise SystemExit(f"frames must share one grid shape, got {sorted(shapes)}")
     themes = load_theme()
 
-    svgs = {name: render(cfg, grid, pal) for name, pal in themes.items()}
+    svgs = {name: render(cfg, grids, pal) for name, pal in themes.items()}
     for path in write_pair(args.out, svgs):
         print(f"{path}  {path.stat().st_size / 1024:.0f} KB")
 

@@ -52,16 +52,18 @@ def main() -> None:
 
     banner_cfg = json.loads((ROOT / "assets" / "banner.json").read_text(encoding="utf-8"))
     source = banner_cfg["source"]
-    if image := source.get("image"):
-        image_path = ROOT / image
+    opts = source.get("dotify", {})
+    frames = source.get("frames") or ([source] if source.get("image") else [])
+
+    for frame in frames:
+        image_path = ROOT / frame["image"]
         if not image_path.exists():
             raise SystemExit(
-                f"assets/banner.json points at {image}, which does not exist.\n"
-                "Put the photo there, or remove 'image' to fall back to the monogram."
+                f"assets/banner.json points at {frame['image']}, which does not exist.\n"
+                "Fetch it with scripts/fetch_icons.py, or drop the entry."
             )
-        opts = source.get("dotify", {})
-        cmd = [str(SCRIPTS / "dotify.py"), str(image_path), "-o", str(ROOT / source["file"])]
-        for flag in ("invert", "no-square"):
+        cmd = [str(SCRIPTS / "dotify.py"), str(image_path), "-o", str(ROOT / frame["file"])]
+        for flag in ("invert", "no-square", "no-autocontrast"):
             if opts.get(flag):
                 cmd.append(f"--{flag}")
         for flag in ("crop", "gamma", "cols", "rows", "vignette"):
@@ -76,12 +78,11 @@ def main() -> None:
     run(str(SCRIPTS / "radar.py"), "--data", "assets/skills.json", "-o", "assets/radar")
     run(str(SCRIPTS / "radar.py"), "--data", "assets/langmix.json", "-o", "assets/radar-langs", "--values")
 
-    # 4. Stats, language mix and project cards, straight from the GitHub API.
+    # 4. Stats and language mix, straight from the GitHub API.
     if not args.skip_cards:
         cards = [
             str(SCRIPTS / "cards.py"),
             "--user", args.user,
-            "--projects", "assets/projects.json",
             "--out", "assets",
         ]
         if EXCLUDE_LANGS:

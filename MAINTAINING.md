@@ -5,10 +5,9 @@ scripts are the renderer, and the `Assets` workflow keeps the two in sync.
 
 ```
 assets/theme.json      colours for both themes, and the accent
-assets/banner.json     the terminal lines in the hero banner
+assets/banner.json     the terminal lines, and the icons in the dot panel
 assets/skills.json     the self-rated skill radar
 assets/langmix.json    the hand-authored language radar
-assets/projects.json   which repos appear as project cards
 ```
 
 ## What updates itself, and what does not
@@ -62,60 +61,71 @@ trigger it by hand: Actions -> Assets -> Run workflow. Edits to `banner.json`,
 `skills.json`, `langmix.json` and `theme.json` are unaffected and redraw on
 push as usual.
 
-## The banner portrait
+## The banner's dot panel
 
 `assets/banner.json` describes the whole picture pipeline. `build.py` reads the
-`source` block, runs the original photo through `dotify.py`, and redraws both
-themes:
+`source` block, runs each image through `dotify.py`, and redraws both themes.
+The panel currently cycles through five icons:
 
 ```json
 "source": {
-  "image": "assets/source/portrait.jpeg",
-  "file":  "assets/source/cache/portrait.npy",
-  "field": 0,
-  "dotify": { "invert": true, "crop": "...", "no-square": true,
-              "cols": 84, "rows": 112, "gamma": 0.8, "vignette": 0.55 }
+  "field": 0.13,
+  "frame_seconds": 2.4,
+  "frames": [
+    { "image": "assets/source/icons/linux.png", "file": "assets/source/cache/linux.npy" },
+    ...
+  ],
+  "dotify": { "cols": 76, "rows": 76, "no-autocontrast": true }
 }
 ```
 
-Drop `image` and it falls back to the `LV` monogram cache. Swapping in a new
-photo means replacing the file and retuning four numbers:
+### Changing the icons
+
+Any [Simple Icons](https://simpleicons.org) slug works:
+
+```bash
+python scripts/fetch_icons.py rust kubernetes redis
+```
+
+That downloads each one, paints it white, pads it and rasterises it into
+`assets/source/icons/`. Then add entries to `frames` and push. The script needs
+`rsvg-convert` locally, but the PNGs are committed, so CI never needs it.
+
+Frames cross-fade in order on their own loop, deliberately not locked to the
+typing animation: two loops of different lengths stop the banner looking like
+it restarts on a beat. `frame_seconds` sets how long each icon holds.
+
+`field` is the minimum ink in every cell - the lit-matrix backdrop. It is drawn
+once as an SVG `<pattern>`, not as several thousand identical circles, which is
+worth about 190 KB. Set it to `0` to have the icons float on bare background.
+
+### Going back to a photo
+
+Replace `frames` with a single `image` / `file` pair. A photo then needs four
+more settings, and the order to tune them in is resolution, crop, polarity,
+gamma:
 
 **`invert`** — the grid stores *ink*, not brightness, and the same ink is drawn
 in both themes. `invert: true` puts ink where the photo is dark, which is right
 for a dark-haired subject against a pale wall. A face lit against a dark
 background wants `false`. Get this backwards and you get a negative.
 
-**`crop`** — `left,top,right,bottom` as fractions. Frame the head. A centre
-crop of a phone photo keeps half a room, and at a couple of thousand dots there
-is no resolution to waste on a wall. With `no-square`, the crop's aspect must
+**`crop`** — `left,top,right,bottom` as fractions. Frame the head; a centre crop
+of a phone photo keeps half a room. With `no-square`, the crop's aspect must
 match `cols:rows` or the face stretches.
 
-**`cols` / `rows`** — resolution, and the setting that matters most. 34x46 gave
-a silhouette with no face in it, 48x64 a blocky approximation; 84x112 is where
-it reads as a photograph. Aim for about three screen pixels per dot at the
-width GitHub renders the README, which for this panel is 84 columns. Higher is
-not better - past that the dots stop resolving and turn to mush.
-
-**`field`** (outside the `dotify` block) — minimum ink in every cell. Keep it
-at `0` for a portrait: a faint background grid competes with the face for
-attention. A monogram or a logo wants about `0.1`, which gives the panel its
-lit-matrix look.
+**`cols` / `rows`** — resolution. 34x46 gave a silhouette with no face in it;
+84x112 read as a photograph. Aim for roughly three screen pixels per dot at the
+width GitHub renders the README. Logos need far less: they are flat shapes, and
+76x76 resolves them cleanly.
 
 **`vignette`** — where the edge falloff starts, 0 to disable. It fades the room
-away so the face is what is lit, and costs nothing compared to running a
-segmentation model.
+away so the subject is what is lit.
 
 Dots are coloured by intensity, through a seven-step ramp from a dimmed accent
 up to a near-white one, and grouped so the fill is written seven times rather
-than seven thousand. An earlier version filled them from one diagonal
-gradient, which made a dot's colour depend on where it sat rather than how
-bright it was - and since the shading is what carries a likeness, it flattened
-the face.
-
-When a photo will not read, the order to try things in is: resolution first,
-then crop, then polarity, then gamma. Render both themes and look - a portrait
-that works on dark can be mud on light.
+than seven thousand. An earlier version filled them from one diagonal gradient,
+which made a dot's colour depend on where it sat rather than how bright it was.
 
 ## Why the charts are self-hosted
 

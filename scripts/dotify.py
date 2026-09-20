@@ -186,6 +186,12 @@ def main() -> None:
         "than the background, which is most indoor portraits",
     )
     ap.add_argument(
+        "--no-autocontrast",
+        action="store_true",
+        help="skip the contrast stretch - right for flat silhouettes like logos, "
+        "where there is nothing to stretch and it only amplifies edge artefacts",
+    )
+    ap.add_argument(
         "--vignette",
         type=float,
         default=0.0,
@@ -220,6 +226,7 @@ def main() -> None:
             crop=crop,
             square=not args.no_square,
             vignette=args.vignette,
+            autocontrast=not args.no_autocontrast,
         )
     else:
         ap.error("pass an image path or --monogram")

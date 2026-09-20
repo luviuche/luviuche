@@ -5,14 +5,13 @@ purpose. Those are shared public instances: when they rate-limit or fall over,
 every README pointing at them shows a broken image. Committing our own SVGs
 means the profile renders from this repo alone.
 
-    python scripts/cards.py --user luviuche --projects assets/projects.json --out assets
+    python scripts/cards.py --user luviuche --out assets
 """
 from __future__ import annotations
 
 import argparse
 import json
 import os
-import re
 import sys
 import urllib.error
 import urllib.request
@@ -307,59 +306,9 @@ def languages_card(
     return "".join(out)
 
 
-def project_card(project: dict, repo: dict | None, pal: Palette) -> str:
-    name = project.get("title") or project["repo"]
-    head, tail = shell(CARD_W, CARD_H, pal, f"{name} project card")
-    out = [
-        head,
-        f'<text x="22" y="34" font-size="14.5" font-weight="700" fill="{pal.accent}">{esc(name)}</text>',
-        f'<text x="22" y="52" font-size="10.5" font-family="monospace" fill="{pal.muted}">{esc(project["repo"])}</text>',
-    ]
-
-    description = project.get("description") or (repo or {}).get("description") or ""
-    for i, line in enumerate(wrap(description, CARD_W - 44, 12)[:4]):
-        out.append(
-            f'<text x="22" y="{78 + i * 17}" font-size="12" fill="{pal.text}">{esc(line)}</text>'
-        )
-
-    out.append(f'<line x1="22" y1="{CARD_H - 34}" x2="{CARD_W - 22}" y2="{CARD_H - 34}" stroke="{pal.border}"/>')
-    y = CARD_H - 14
-    x = 22
-    if repo and repo.get("language"):
-        colour = language_colour(repo["language"], pal)
-        out.append(
-            f'<circle cx="{x + 5}" cy="{y - 4}" r="5" fill="{colour}"/>'
-            f'<text x="{x + 16}" y="{y}" font-size="11" fill="{pal.muted}">{esc(repo["language"])}</text>'
-        )
-        x += 26 + len(repo["language"]) * 6.2
-    if repo:
-        # A star count of zero says nothing good, so it only appears once there
-        # is something to report. "Updated" always earns its place: it shows
-        # the work is alive.
-        if repo.get("stargazers_count"):
-            out.append(
-                f'<text x="{fmt(x)}" y="{y}" font-size="11" fill="{pal.muted}">★ {repo["stargazers_count"]}</text>'
-            )
-            x += 40
-        if repo.get("pushed_at"):
-            when = datetime.strptime(repo["pushed_at"], "%Y-%m-%dT%H:%M:%SZ").strftime("%b %Y")
-            out.append(
-                f'<text x="{fmt(x)}" y="{y}" font-size="11" fill="{pal.muted}">Updated {when}</text>'
-            )
-
-    out.append(tail)
-    return "".join(out)
-
-
-def slug(name: str) -> str:
-    return re.sub(r"[^A-Za-z0-9_-]+", "-", name).strip("-")
-
-
-# --------------------------------------------------------------------------- #
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--user", required=True)
-    ap.add_argument("--projects", type=Path)
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument(
         "--lang-metric",
@@ -422,17 +371,6 @@ def main() -> None:
             args.out / "card-languages",
             {n: languages_card(langs, p, args.lang_metric) for n, p in themes.items()},
         )
-
-    if args.projects:
-        by_name = {r["name"].lower(): r for r in repos}
-        for project in json.loads(args.projects.read_text(encoding="utf-8"))["projects"]:
-            repo = by_name.get(project["repo"].lower())
-            if repo is None:
-                print(f"  ! {project['repo']} not found on the account, using config only")
-            written += write_pair(
-                args.out / f"card-{slug(project['repo'])}",
-                {n: project_card(project, repo, p) for n, p in themes.items()},
-            )
 
     for path in written:
         print(f"{path}  {path.stat().st_size / 1024:.1f} KB")
