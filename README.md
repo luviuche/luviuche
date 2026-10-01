@@ -123,9 +123,9 @@ worth the hype, or how to make a Linux desktop look good.
 ## Recent activity
 
 <!--START_SECTION:activity-->
-1. 🎉 Merged PR [#12](https://github.com/luviuche/project-network-analyzer/pull/12) in [luviuche/project-network-analyzer](https://github.com/luviuche/project-network-analyzer)
-2. 💪 Opened PR [#12](https://github.com/luviuche/project-network-analyzer/pull/12) in [luviuche/project-network-analyzer](https://github.com/luviuche/project-network-analyzer)
-3. 🎉 Merged PR [#11](https://github.com/luviuche/project-network-analyzer/pull/11) in [luviuche/project-network-analyzer](https://github.com/luviuche/project-network-analyzer)
+1. 🎉 Merged PR [#13](https://github.com/luviuche/project-network-analyzer/pull/13) in [luviuche/project-network-analyzer](https://github.com/luviuche/project-network-analyzer)
+2. 💪 Opened PR [#13](https://github.com/luviuche/project-network-analyzer/pull/13) in [luviuche/project-network-analyzer](https://github.com/luviuche/project-network-analyzer)
+3. 🎉 Merged PR [#12](https://github.com/luviuche/project-network-analyzer/pull/12) in [luviuche/project-network-analyzer](https://github.com/luviuche/project-network-analyzer)
 4. 🔒 Closed issue [#3](https://github.com/luviuche/mi-primer-repo/issues/3) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
 5. ℹ️ Assigned issue [#5](https://github.com/luviuche/mi-primer-repo/issues/5) in [luviuche/mi-primer-repo](https://github.com/luviuche/mi-primer-repo)
 <!--END_SECTION:activity-->
